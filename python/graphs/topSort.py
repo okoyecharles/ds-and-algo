@@ -16,7 +16,7 @@ courses = {
 	'8': ['7']	
 }
 # expected return 56374218
-# NB: There is no unique order, as long as every course dependency comes before the course, The Output
+# NB: There is no unique order, as long as every course dependency comes before the course, The output is valid
 
 
 def topsort(graph):
