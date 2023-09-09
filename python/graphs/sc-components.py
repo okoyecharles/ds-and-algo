@@ -1,6 +1,4 @@
 # Strongly connected components
-
-from pprint import pprint
 from index import Graph
 
 edges = [
@@ -11,11 +9,11 @@ edges = [
 # a --- c     e        h --- i
 #  \   /    /   \      |     |
 #    b --- d --- f --- g --- j --- k
-
 # 4 connected components
 # expected return: [ [a, c, b], [e, d, f], [h, i, g, j], [k] ]
 
 def scc(Graph):
+	# populate the stack (post order)
 	visited, stack = set(), []
 	graph = Graph.graph
 
@@ -30,8 +28,9 @@ def scc(Graph):
 		visit(node)
 
 	visited, res = set(), []
-	reversed = Graph.reversed()
+	reversed = Graph.reversed() # reverse the graph
 	
+	# on each traversal create a component and append path
 	def rvisit(node, component):
 		if node in visited: return
 		visited.add(node)
