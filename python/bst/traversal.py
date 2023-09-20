@@ -5,7 +5,16 @@ vals = [5, 3, 8, 1, 2, 11]
 for val in vals:
   tree.insert(val)
 
+#                     5
+#                   /   \
+#                  3     8
+#                /        \
+#               1          11
+#                \
+#                 2
 # inorder traversal prints numbers in sorted order
+# ie: 1 2 3 5 8 11
+
 def inorder(root):
   if root is None: return
   inorder(root.left)
