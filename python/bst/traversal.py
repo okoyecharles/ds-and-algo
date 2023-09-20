@@ -50,21 +50,11 @@ def preorder(root):
 	preorder(root.right)
 
 def preorder_iter(root):
-	curr = root
 	stack = [root]
-	visited = set()
-	
+
 	while len(stack):
-		if curr not in visited:
-			print(curr.val)
-			visited.add(curr)
+		curr = stack.pop()
+		print(curr.val)
 
-		if curr.left and curr.left not in visited:
-			curr = curr.left
-			stack.append(curr)
-		else:
-			curr = stack.pop()
-			if curr.right:
-				curr = curr.right
-				stack.append(curr)
-
+		if curr.right: stack.append(curr.right)
+		if curr.left: stack.append(curr.left)
