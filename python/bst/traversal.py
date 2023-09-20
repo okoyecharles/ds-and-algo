@@ -39,3 +39,32 @@ def inorder_iter(root):
     if curr.right:
       curr = curr.right
       stack.append(curr)
+
+# preorder traversal follows root-left-right pattern
+# ie: 5 3 1 2 8 11
+
+def preorder(root):
+	if root is None: return
+	print(root.val)
+	preorder(root.left)
+	preorder(root.right)
+
+def preorder_iter(root):
+	curr = root
+	stack = [root]
+	visited = set()
+	
+	while len(stack):
+		if curr not in visited:
+			print(curr.val)
+			visited.add(curr)
+
+		if curr.left and curr.left not in visited:
+			curr = curr.left
+			stack.append(curr)
+		else:
+			curr = stack.pop()
+			if curr.right:
+				curr = curr.right
+				stack.append(curr)
+
