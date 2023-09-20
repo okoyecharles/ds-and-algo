@@ -22,23 +22,20 @@ def inorder(root):
   inorder(root.right)
 
 def inorder_iter(root):
-  stack = [root]
-  visited = set()
-  visited.add(root)
-  curr = root
+	curr = root
+	stack = []
 
-  while len(stack):
-    while curr.left and not curr.left in visited:
-      curr = curr.left
-      stack.append(curr)
-      visited.add(curr)
+	while True:
+		while curr:
+			stack.append(curr)
+			curr = curr.left
 
-    curr = stack.pop()
-    print(curr.val)
+		if not len(stack): return
+		curr = stack.pop()
+		print(curr.val)
+		curr = curr.right
 
-    if curr.right:
-      curr = curr.right
-      stack.append(curr)
+inorder_iter(tree.head)
 
 # preorder traversal follows root-left-right pattern
 # ie: 5 3 1 2 8 11
