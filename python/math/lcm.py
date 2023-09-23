@@ -1,20 +1,5 @@
 # Lowest Common Multiple
-
-# returns the prime factors of a number (sorted)
-def factors(num):
-	if num == 1: return [1]
-
-	divisors = []
-	divisor = 2
-
-	while num != 1:
-		if num % divisor == 0:
-			divisors.append(divisor)
-			num = num / divisor
-		else:
-			divisor = divisor + 1
-
-	return divisors
+from index import factors
 
 # merges common numbers between two arrays and adds unique numbers
 # eg: merge([1, 2, 3], [1, 3, 3, 4]) => [1, 2, 3, 3, 4]
