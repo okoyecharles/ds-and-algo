@@ -1,3 +1,5 @@
+# Traversals (inorder, preorder, postorder)
+
 from index import BST
 
 tree = BST()
@@ -55,3 +57,12 @@ def preorder_iter(root):
 
 		if curr.right: stack.append(curr.right)
 		if curr.left: stack.append(curr.left)
+
+def postorder(root):
+	if root is None: return
+	postorder(root.left)
+	postorder(root.right)
+	print(root.val)
+
+def postorder_iter(root):
+	pass
