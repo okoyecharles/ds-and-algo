@@ -22,3 +22,6 @@ def diffBetweenTwoStrings(source, target):
   return chars
     
 diffBetweenTwoStrings("ABCDEFG", "ABDFFGH")
+# source = "ABCDEFG"
+# target = "ABDFFGH"
+# we might return: ["A", "B", "-C", "D", "-E", "F", "+F", "G", "+H"
