@@ -1,6 +1,11 @@
 # Difference between two strings
 
-def diffBetweenTwoStrings(source, target):
+# Find the steps to create target from source using the lowest edits possible
+# source = "ABCDEFG"
+# target = "ABDFFGH"
+# return: ["A", "B", "-C", "D", "-E", "F", "+F", "G", "+H"
+
+def diff_between_two_strings(source, target):
   def split_prepend (str, pre):
     chars = [c for c in str]
     chars = list(map(lambda char: pre + char, chars))
@@ -20,8 +25,9 @@ def diffBetweenTwoStrings(source, target):
       
   chars, operations = diff(0, 0, [], 0)
   return chars
+
+def diff_between_two_strings_tabular(source, target):
+  pass
+
     
-diffBetweenTwoStrings("ABCDEFG", "ABDFFGH")
-# source = "ABCDEFG"
-# target = "ABDFFGH"
-# we might return: ["A", "B", "-C", "D", "-E", "F", "+F", "G", "+H"
+diff_between_two_strings("ABCDEFG", "ABDFFGH")
