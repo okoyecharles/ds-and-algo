@@ -24,6 +24,21 @@ def postorder(root):
   print(root.val)
 
 def postorder_iter(root):
-  pass
+  stack, visited = [], set()
+  curr = root
+  
+  while True:
+    while curr.left and curr.left not in visited:
+      stack.append(curr)
+      curr = curr.left
 
-postorder(tree.head)
+    if curr.right and curr.right not in visited:
+      stack.append(curr)
+      curr = curr.right
+    else:
+      print(curr.val)
+      visited.add(curr)
+      if not len(stack): break
+      curr = stack.pop()
+
+postorder_iter(tree.head)
