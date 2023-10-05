@@ -46,3 +46,6 @@ class BST:
                 return search(head.left)
 
         return search(self.head)
+
+    def reverse(self, val):
+        pass
