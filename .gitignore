@@ -6,7 +6,9 @@
 __pycache__/
 *.py[cod]
 *$py.class
-grades.py
+
+# Java-compiled class files
+*.class
 
 # VS Code
 .vscode
