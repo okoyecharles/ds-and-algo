@@ -9,6 +9,7 @@ __pycache__/
 
 # Java-compiled class files
 *.class
+out
 
 # VS Code
 .vscode

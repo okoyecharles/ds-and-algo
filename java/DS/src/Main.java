@@ -6,7 +6,5 @@ public class Main {
         for (int value: values) {
            list.insert(value); 
         }
-
-        list.printValues();
     }
 }
