@@ -1,6 +1,3 @@
-# values: tuple[] | num[]
-# frequencies: num[] | None
-
 class FrequencyDistribution:
     def __init__(self, values, frequency=None):
         self.grouped = False
@@ -9,44 +6,47 @@ class FrequencyDistribution:
         self.class_boundary = []
         self.class_size = 1
         self.class_boundary_gap = 0
-        self.index_map = None
         self.rows = 0
 
+        if not frequency:
+            frequency = [1 for _ in values]
         if type(values[0]) is tuple:
             self.grouped = True
 
-        position_map = {}
-        if not self.grouped:
-            values.sort()
-            for value in values:
-                if value in position_map:
-                    position = position_map[value]
-                    self.frequency[position] += 1
+        inserted = set()
+        # sort the values in ascending order
+        values_frequency = zip(values, frequency)
+        values_frequency = sorted(values_frequency)
+        values = [v for v, _ in values_frequency]
+        frequency = [f for _, f in values_frequency]
+        
+        if not self.grouped: 
+            # ungrouped distributions
+            for i, value in enumerate(values):
+                if value in inserted:
+                    self.frequency[-1] += frequency[i]
                     continue
 
-                position_map[value] = len(self.class_mark)
+                inserted.add(value)
                 self.class_mark.append(value)
-                self.frequency.append(1)
+                self.frequency.append(frequency[i])
         else:
-            values_frequency = zip(values, frequency)
-            values_frequency = sorted(values_frequency)
-            values = [v for v, _ in values_frequency]
-            frequency = [f for _, f in values_frequency]
-
+            # grouped distributions
             self.class_size = values[1][0] - values[0][0]
             self.class_boundary_gap = (values[1][0] - values[0][1]) / 2.0
-            if not frequency:
-                frequency = [1 for _ in values]
 
-            for i in range(len(values)):
-                lower, upper = values[i]
+            for i, value in enumerate(values):
+                lower, upper = value
                 class_mark = (lower + upper) / 2.0
+                if value in inserted:
+                  self.frequency[-1] += frequency[i]
+                  continue
+                
+                inserted.add(value)
                 self.class_mark.append(class_mark)
                 self.frequency.append(frequency[i])
                 self.class_boundary.append((lower, upper))
-                position_map[class_mark] = i
 
-        self.index_map = position_map
         self.rows = len(self.class_mark)
 
 class StatCalculator:
@@ -149,9 +149,7 @@ class StatCalculator:
         mean = self.mean()
         freq_deviations = []
         for row in range(tb.rows):
-          freq_deviations.append(
-            tb.frequency[row] * abs(tb.class_mark[row] - mean)
-          )
+            freq_deviations.append(tb.frequency[row] * abs(tb.class_mark[row] - mean))
 
         result = sum(freq_deviations) / sum(tb.frequency)
         return round(result, self.precision)
@@ -161,9 +159,9 @@ class StatCalculator:
         mean = self.mean()
         freq_square_deviations = []
         for row in range(tb.rows):
-          freq_square_deviations.append(
-            tb.frequency[row] * pow(tb.class_mark[row] - mean, 2)
-          )
+            freq_square_deviations.append(
+                tb.frequency[row] * pow(tb.class_mark[row] - mean, 2)
+            )
 
         sum_square_deviations = sum(freq_square_deviations)
         n = sum(tb.frequency)
@@ -178,3 +176,34 @@ class StatCalculator:
     def standard_deviation(self, sample=False):
         result = pow(self.variance(sample), 0.5)
         return round(result, self.precision)
+
+    def moment(self, n, about="mean"):
+        tb = self.table
+        about_measure = {"mean": self.mean, "median": self.median, "mode": self.mode}
+        if type(about) is str:
+            about = about_measure[about]()
+
+        deviations = []
+        for row in range(tb.rows):
+            deviations.append(tb.frequency[row] * pow(tb.class_mark[row] - about, n))
+
+        result = sum(deviations) / sum(tb.frequency)
+        return round(result, self.precision)
+
+    def coeff_of_skewness(self):
+        mean = self.mean()
+        median = self.median()
+        mode = self.mode()
+        standard_deviation = self.standard_deviation()
+        # quartiles
+        q1, q2, q3 = self.quartile(1), self.quartile(2), self.quartile(3)
+        # moments
+        m2, m3, m4 = self.moment(2), self.moment(3), self.moment(4)
+        b1, b2 = pow(m3, 2) / pow(m2, 3), m4 / pow(m2, 2)
+
+        return {
+            "modal": (mean - mode) / standard_deviation,
+            "median": 3 * (mean - median) / standard_deviation,
+            "bowley": ((q3 + q1) - (2 * q2)) / (q3 - q1),
+            "momental": (pow(b1, 0.5) * (b2 + 3)) / 2 * ((5 * b2) - (6 * b1) - 9),
+        }
